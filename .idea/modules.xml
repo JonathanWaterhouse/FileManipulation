@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../BWSimplification/.idea/.idea.iml" filepath="$PROJECT_DIR$/../BWSimplification/.idea/.idea.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../BWHierarchy/.idea/BWHierarchy.iml" filepath="$PROJECT_DIR$/../BWHierarchy/.idea/BWHierarchy.iml" />
+      <module fileurl="file://$USER_HOME$/Documents/My Data/PythonProjects/COMAutomation/.idea/COMAutomation.iml" filepath="$USER_HOME$/Documents/My Data/PythonProjects/COMAutomation/.idea/COMAutomation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/FileManipulation.iml" filepath="$PROJECT_DIR$/.idea/FileManipulation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Maestro/.idea/Maestro.iml" filepath="$PROJECT_DIR$/../Maestro/.idea/Maestro.iml" />
+      <module fileurl="file://$USER_HOME$/Documents/My Data/PythonProjects/SAPConnection/.idea/SAPConnection.iml" filepath="$USER_HOME$/Documents/My Data/PythonProjects/SAPConnection/.idea/SAPConnection.iml" />
+    </modules>
+  </component>
+</project>
+

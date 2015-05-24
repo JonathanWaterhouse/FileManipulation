@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="jdk" jdkName="Python 3.4.1 (C:\Python34\python.exe)" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="BWHierarchy" />
+    <orderEntry type="module" module-name="COMAutomation" />
+    <orderEntry type="module" module-name=".idea" />
+    <orderEntry type="module" module-name="Maestro" />
+    <orderEntry type="module" module-name="SAPConnection" />
+  </component>
+</module>
+
