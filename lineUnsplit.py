@@ -11,13 +11,17 @@ def Unsplit(fileIn, fileOut, field_sep):
     l1 = []
     l2 = []
     for line in fi:
-        ln = line.lstrip(field_sep).lstrip(' ').rstrip(field_sep + '\n')
+        #if line[0] != "|": continue
+        if line[0] == "-":
+            continue
         if inCount%2 == 0:
+            ln = line.rstrip(field_sep + '\n')
             l1 = ln.split(field_sep)
         else:
+            ln = line.rstrip('\n')
             l2 = ln.split(field_sep)
             l1.extend(l2)
-            fo.write(field_sep.join(l1) + '\n')
+            fo.write(field_sep.join(l1) + '|\n')
             l1, l2 = [], []
             outCount += 1
         inCount += 1
@@ -58,10 +62,10 @@ def wrtToExcel(fileIn, fileOut):
         i += 1
 
 if __name__ == '__main__':
-    folder = 'C:\\Documents and Settings\\u104675\\Desktop\\CRMHighLevelContractItem\\System test\\'
-    fileIn = folder + 'ZO00217.XLS'
-    fileOut = folder + 'ZO00217_OUT.XLS'
-    field_sep = '\t'
+    folder = 'C:\\Documents and Settings\\u104675\\Desktop\\'
+    fileIn = folder + 'CRMContractLineItem_PSA.TXT'
+    fileOut = folder + 'CRMContractLineItem_PSA_Unsplit.TXT'
+    field_sep = '|'
     Unsplit(fileIn, fileOut, field_sep)
 
     fileIn = folder + 'ZO00217Jul1st-20th_UNSPLIT.txt'

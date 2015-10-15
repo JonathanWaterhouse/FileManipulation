@@ -47,8 +47,8 @@ def col_names_reformat(in_str):
 if __name__ == "__main__":
     #path = 'C:\\Users\\u104675\\OneDrive - Eastman Kodak Company\\P2238 Reorganisation\\MDGeogAttribs\\'
     path = 'C:\\Users\\u104675\\Desktop\\'
-    database = path + 'customer.db'
-    file = path + "ZGLOBACNT.txt"
-    table = 'ZGLOBACNT'
+    database = path + 'RSSTAMANPART.db'
+    file = path + "RSSTATMANPART1.txt"
+    table = 'RSSTAMANPART'
     unwanted_cols = [] # Give the column numbers. Normal python list numbering, first is 0
     table = TextInSQL(database, file, table, unwanted_cols)
