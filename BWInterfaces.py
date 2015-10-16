@@ -157,6 +157,10 @@ class BWSchedules():
         """
         use xlsxwriter module to write database view to excel.
         """
+        #Find calendars which we are not interested in
+        cal_file_name = 'PROD-CALENDARS-10122015.txt'
+        interesting_days = ['11/13/2015', '11/14/2015','11/15/2015','11/16/2015','11/17/2015','11/18/2015']
+        cals_to_exclude = self.find_calendars_with_dates(path,cal_file_name,interesting_days)
         workbook = xlsxwriter.Workbook(path + output_loc)
         worksheet = workbook.add_worksheet()
         #Set up display format
@@ -166,8 +170,9 @@ class BWSchedules():
         worksheet.set_column(2,2,15)
         worksheet.set_column(3,3,20)
         worksheet.set_column(4,4,40)
-        worksheet.set_column(5,5,60)
+        worksheet.set_column(5,5,15)
         worksheet.set_column(6,6,60)
+        worksheet.set_column(7,7,60)
         #Column headings
         format = workbook.add_format({'bold':True})
         worksheet.write(0,0,'SCHEDULE',format)
@@ -175,17 +180,25 @@ class BWSchedules():
         worksheet.write(0,2,'PLATFORM',format)
         worksheet.write(0,3,'ACTION',format)
         worksheet.write(0,4,'FREQ',format)
-        worksheet.write(0,5,'PRECEDES',format)
-        worksheet.write(0,6,'FOLLOWS',format)
+        worksheet.write(0,5,'POSS RELVT CAL', format)
+        worksheet.write(0,6,'PRECEDES',format)
+        worksheet.write(0,7,'FOLLOWS',format)
         worksheet.freeze_panes(1,0)
         #Read the database to get the relevant data
         sqlite_db = path + db
         conn = sqlite3.connect(sqlite_db)
         c = conn.cursor()
-        record = namedtuple('record', 'SCHEDULE NAME PLATFORM ACTION FREQ')
+        record = namedtuple('record', 'SCHEDULE NAME PLATFORM ACTION FREQ NONREL')
         rows = []
+        # Output of next statement is schedule, name, platform, action, freq
         for row in c.execute('SELECT * FROM [BWIFSchedsWithRuntimes] ORDER BY SCHEDULE'):
-            rows.append(record(row[0], row[1],row[2],row[3],row[4]))
+            if row[4].startswith('RUNCYCLE CALENDAR'):
+                cal = row[4][row[4].rfind(' ')+1:len(row[4])].strip('\n')
+                if cal in cals_to_exclude: relevant = 'N'
+                else: relevant = 'Y'
+            else: relevant = 'Y'
+            if row[4].startswith('REQUEST'): relevant = 'N'
+            rows.append(record(row[0], row[1],row[2],row[3],row[4],relevant))
         #Read database to get preceding and following schedules and write lines to excel
         i,j = 1, 0
         for record in rows:
@@ -204,6 +217,40 @@ class BWSchedules():
         #Now we know the last row number apply an autofilter
         worksheet.autofilter(0,0,i-1,6)
 
+    def find_calendars_with_dates(self,path, cal_file_name, interesting_days):
+        """
+        Read calendar, identify dates they contain and find calendars not containing specific dates
+        :param path: Path to calendar file
+        :param cal_file_name: calendar file name
+        :param interesting_days: those days we want to see if a calendar contains. A list of dates in US format
+        :return: list of calendars not containing the interesting dates
+        """
+        cal_file = open(path + cal_file_name, 'r')
+        calendar = {}
+        cal_dates = []
+        for line in cal_file:
+            if line.startswith('$CALENDAR'): continue
+            if line.startswith('  "'): continue
+            if not line.startswith(' ') and not line.startswith('\n'):
+                calendar_name = line[0:line.find(' ')]
+                cal_dates = []
+            if line.startswith(' ') and line != '':
+                cal_dates.append(line.rstrip('\n').strip())
+            if line == '\n': # End calendar
+                calendar[calendar_name] = cal_dates
+                continue
+        s = set()
+        for k in calendar.keys():
+            #calendar[k] is a list l=each elemsnt contains 'mm/dd/yy mm/dd/yy ...'
+            calendar[k] = ' '.join(calendar[k]).split(' ')
+            interesting = False
+            for d in interesting_days:
+                if d in calendar[k]: interesting = True
+            if not interesting: s.add(k) # remove duplicates
+        for el in s: print (el,calendar[el])
+        return list(s)
+
+
 if __name__ == '__main__':
     path = 'c:\\Users\\u104675\\Jon_Waterhouse_Docs\\OneDrive - Eastman Koda~1\\PythonProjects\\Maestro\\'
     db = 'schedule.db'
@@ -211,3 +258,5 @@ if __name__ == '__main__':
     s.calculate_interfaces(path,db)
     output_xlsx = 'BW Interface Schedules.xlsx'
     s.output(path, db, output_xlsx)
+
+    #s.find_calendars_with_dates(path, cal_file_name, interesting_days)
